@@ -1,0 +1,8 @@
+---
+applications:
+- name: dash-lite
+  instances: 1
+  memory: 64MB
+  disk_quota: 258MB
+  host: dash-lite-sildevms
+  buildpack: python_buildpack

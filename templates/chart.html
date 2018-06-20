@@ -1,0 +1,30 @@
+{% extends 'main.html' %}
+
+{% block body %}
+<!-- Chart.js CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+  </div>
+
+<div class="ct-chart ct-perfect-fourth"></div>
+<script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+var getData = $.get('/data');
+getData.done(function(results){
+  var data = {
+    // A labels array that can contain any sort of values
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    // Our series array that contains series objects or in this case series data arrays
+    series: [results.results]
+  };
+  new Chartist.Line('.ct-chart', data);
+console.log(results);
+});
+
+</script>
+{% endblock %}
