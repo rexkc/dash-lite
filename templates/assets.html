@@ -1,0 +1,8 @@
+{% extends 'main.html' %}
+
+{% block body %}
+    {% for asset in assets_data._embedded.assets %}
+        <div><p>Name: {{asset.name}}, ID: {{asset.assetId}}, <a href="{{url_for('assets_aspects', id=asset.assetId)}}">Aspects</a></p> 
+		</div>
+        {% endfor %}
+{% endblock %}

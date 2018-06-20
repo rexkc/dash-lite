@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+
+{% block body %}
+    {% for aspect in aspects_data._embedded.aspects %}
+        <div><p>Aspect Name: <a href="{{ url_for('timeseries',asset=aspect.holderAssetId,aspect=aspect.name)}}?from=&to=&preset=Last+7+Days">{{aspect.name}}</a>, Category: {{aspect.category}}, Description: {{aspect.description}}</p>
+	    <p>Variables:</p>
+            {% for variable in aspect.variables %}
+			    <p>Variable Name: {{variable.name}}, Unit: {{variable.unit}}, Datatype: {{variable.dataType}}, 
+            {% endfor %}
+	    </div>
+     {% endfor %}
+{% endblock %}
