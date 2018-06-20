@@ -1,6 +1,6 @@
+{% extends 'main.html' %}
 
-<!DOCTYPE html>
-<html>
+{% block body %}
 <head>
     <title>simpleheat demo</title>
     <style>
@@ -27,7 +27,7 @@
         <label>Radius </label><input type="range" id="radius" value="25" min="10" max="50" /><br />
         <label>Blur </label><input type="range" id="blur" value="15" min="10" max="50" />
     </div>
-    <canvas id="canvas" width="1000" height="600"></canvas>
+    <canvas id="canvas" width="900" height="600"></canvas>
 </div>
 
 <script src="{{ url_for('static', filename='simpleheat.js')}}"></script>
@@ -69,4 +69,4 @@ radius[changeType] = blur[changeType] = function (e) {
 
 </script>
 </body>
-</html>
+{% endblock %}
