@@ -1,12 +1,19 @@
-{% extends 'main.html' %}
+{% extends 'main.html' %} {% block body %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Aspect List</h1>
+    </div>
 
-{% block body %}
-    {% for aspect in aspects_data._embedded.aspects %}
-        <div><p>Aspect Name: <a href="{{ url_for('timeseries',asset=aspect.holderAssetId,aspect=aspect.name)}}?from=&to=&preset=Last+7+Days">{{aspect.name}}</a>, Category: {{aspect.category}}, Description: {{aspect.description}}</p>
-	    <p>Variables:</p>
-            {% for variable in aspect.variables %}
-			    <p>Variable Name: {{variable.name}}, Unit: {{variable.unit}}, Datatype: {{variable.dataType}}, 
-            {% endfor %}
-	    </div>
-     {% endfor %}
-{% endblock %}
+    <div class="card">
+        {% for aspect in aspects_data._embedded.aspects %}
+        <div class="card-header">
+            <p>Aspect Name: {{aspect.name}}, Category: {{aspect.category}}, Description: {{aspect.description}}</p>
+        </div>
+        <ul class="list-group list-group-flush"></ul>
+        {% for variable in aspect.variables %}
+        <p>Variable Name: {{variable.name}}, Unit: {{variable.unit}}, Datatype: {{variable.dataType}}
+            <a href="{{ url_for('timeseries',asset=aspect.holderAssetId,aspect=aspect.name,var = variable.name)}}" class="btn btn-info float-right"
+                role="button">Plot Variable</a>
+            {% endfor %} {% endfor %}
+    </div>
+    {% endblock %}

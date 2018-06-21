@@ -1,8 +1,15 @@
-{% extends 'main.html' %}
-
-{% block body %}
-    {% for asset in assets_data._embedded.assets %}
-        <div><p>Name: {{asset.name}}, ID: {{asset.assetId}}, <a href="{{url_for('assets_aspects', id=asset.assetId)}}">Aspects</a></p> 
-		</div>
-        {% endfor %}
-{% endblock %}
+{% extends 'main.html' %} {% block body %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Assets List</h1>
+    </div>
+    {% for asset in assets_data._embedded.assets %} {% if asset.name != '(DELETED)'%}
+    <div class="card">
+        <p>Name: {{asset.name}}, ID: {{asset.assetId}},
+            <a href="{{url_for('assets_aspects', id=asset.assetId)}}" class="btn btn-info float-right"
+                role="button">Aspects</a>
+        </p>
+    </div>
+    {% endif %} {% endfor %}
+    <h5 class="h5">(not showing assets with deletion flag)</h5>
+    {% endblock %}
