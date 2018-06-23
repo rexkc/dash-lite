@@ -3,6 +3,8 @@ from random import sample
 import os
 import datetime
 import numpy as np
+import plotly
+import pandas as pd
 import requests
 import urllib
 import json
@@ -23,6 +25,11 @@ def home():
 def reports():
     print(os.getenv("VCAP_APP_PORT"))
     return render_template("reports.html")
+
+@app.route('/floorplan')
+def floorplan():
+    dataArray = [{'x': 0, 'y': 0.4, 'v': 900},{'x': -0.9, 'y': 0.4, 'v': 900}]
+    return render_template("floorplan.html",dataArray = dataArray)
 
 @app.route('/data')
 def data():

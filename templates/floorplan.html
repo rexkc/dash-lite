@@ -1,0 +1,137 @@
+{% extends 'main.html' %} {% block body %}
+
+<head>
+    <style>
+        #myChart {
+            background-image: url(../static/floorPlan.JPG);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+    </style>
+    <script src="{{ url_for('static', filename='utils.js')}}"></script>
+</head>
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">BW-Building 3</h1>
+    </div>
+
+    <div class="container">
+        <canvas id="myChart" width="900" height="600"></canvas>
+    </div>
+
+    <!-- Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        var DATA_COUNT = 1;
+        var MIN_XY = -150;
+        var MAX_XY = 100;
+        var utils = Samples.utils;
+        utils.srand(110);
+        function colorize(opaque, context) {
+            var value = context.dataset.data[context.dataIndex];
+            var x = value.x / 100;
+            var y = value.y / 100;
+            var r = x < 0 && y < 0 ? 250 : x < 0 ? 150 : y < 0 ? 50 : 0;
+            var g = x < 0 && y < 0 ? 0 : x < 0 ? 50 : y < 0 ? 150 : 250;
+            var b = x < 0 && y < 0 ? 0 : x > 0 && y > 0 ? 250 : 150;
+            var a = opaque ? 1 : 0.5 * value.v / 1000;
+            return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+        }
+        // function generateData() {
+        //     var data = [];
+        //     var i;
+        //     for (i = 0; i < DATA_COUNT; ++i) {
+        //         data.push({
+        //             x: 0,
+        //             y: 0.4,
+        //             v: 900
+        //         });
+        //     }
+        //     return data;
+        // }
+        // var data = {
+        //     datasets: [{
+        //         data: generateData()
+        //     }]
+        // };
+        var data = [];
+        array = {{dataArray | safe}};
+        data.push(array[0]);
+        data.push(array[1])
+        data = {
+            datasets: [{
+                data
+            }]
+        };
+        console.log(data)
+        console.log({{dataArray | safe}})
+        var options = {
+            aspectRatio: 1,
+            legend: false,
+            tooltips: true,
+            elements: {
+                point: {
+                    backgroundColor: 'rgba(205,0,0,0.5)',
+                    borderColor: colorize.bind(null, true),
+                    borderWidth: function (context) {
+                        return Math.min(Math.max(1, context.datasetIndex + 1), 8);
+                    },
+                    hoverBackgroundColor: 'transparent',
+                    hoverBorderColor: function (context) {
+                        return utils.color(context.datasetIndex);
+                    },
+                    hoverBorderWidth: function (context) {
+                        var value = context.dataset.data[context.dataIndex];
+                        return Math.round(8 * value.v / 1000);
+                    },
+                    radius: function (context) {
+                        var value = context.dataset.data[context.dataIndex];
+                        var size = context.chart.width;
+                        var base = Math.abs(value.v) / 1000;
+                        return (size / 24) * base;
+                    }
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        max: 1,
+                        min: -1
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        max: 1,
+                        min: -1
+                    }
+                }]
+            }
+        };
+        var chart = new Chart('myChart', {
+            type: 'bubble',
+            data: data,
+            options: options
+        });
+        // eslint-disable-next-line no-unused-vars
+        function randomize() {
+            chart.data.datasets.forEach(function (dataset) {
+                dataset.data = generateData();
+            });
+            chart.update();
+        }
+        // eslint-disable-next-line no-unused-vars
+        function addDataset() {
+            chart.data.datasets.push({
+                data: generateData()
+            });
+            chart.update();
+        }
+        // eslint-disable-next-line no-unused-vars
+        function removeDataset() {
+            chart.data.datasets.shift();
+            chart.update();
+        }
+    </script> {% endblock %}
