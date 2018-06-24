@@ -9,7 +9,7 @@
             background-position: center center;
         }
     </style>
-    <script src="{{ url_for('static', filename='utils.js')}}"></script>
+    <!-- <script src="{{ url_for('static', filename='utils.js')}}"></script> -->
 </head>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
@@ -25,113 +25,95 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-        var DATA_COUNT = 1;
-        var MIN_XY = -150;
-        var MAX_XY = 100;
-        var utils = Samples.utils;
-        utils.srand(110);
-        function colorize(opaque, context) {
-            var value = context.dataset.data[context.dataIndex];
-            var x = value.x / 100;
-            var y = value.y / 100;
-            var r = x < 0 && y < 0 ? 250 : x < 0 ? 150 : y < 0 ? 50 : 0;
-            var g = x < 0 && y < 0 ? 0 : x < 0 ? 50 : y < 0 ? 150 : 250;
-            var b = x < 0 && y < 0 ? 0 : x > 0 && y > 0 ? 250 : 150;
-            var a = opaque ? 1 : 0.5 * value.v / 1000;
-            return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
-        }
-        // function generateData() {
-        //     var data = [];
-        //     var i;
-        //     for (i = 0; i < DATA_COUNT; ++i) {
-        //         data.push({
-        //             x: 0,
-        //             y: 0.4,
-        //             v: 900
-        //         });
-        //     }
-        //     return data;
-        // }
-        // var data = {
-        //     datasets: [{
-        //         data: generateData()
-        //     }]
-        // };
-        var data = [];
-        array = {{dataArray | safe}};
-        data.push(array[0]);
-        data.push(array[1])
-        data = {
-            datasets: [{
-                data
-            }]
-        };
-        console.log(data)
-        console.log({{dataArray | safe}})
-        var options = {
-            aspectRatio: 1,
-            legend: false,
-            tooltips: true,
-            elements: {
-                point: {
-                    backgroundColor: 'rgba(205,0,0,0.5)',
-                    borderColor: colorize.bind(null, true),
-                    borderWidth: function (context) {
-                        return Math.min(Math.max(1, context.datasetIndex + 1), 8);
-                    },
-                    hoverBackgroundColor: 'transparent',
-                    hoverBorderColor: function (context) {
-                        return utils.color(context.datasetIndex);
-                    },
-                    hoverBorderWidth: function (context) {
-                        var value = context.dataset.data[context.dataIndex];
-                        return Math.round(8 * value.v / 1000);
-                    },
-                    radius: function (context) {
-                        var value = context.dataset.data[context.dataIndex];
-                        var size = context.chart.width;
-                        var base = Math.abs(value.v) / 1000;
-                        return (size / 24) * base;
-                    }
-                }
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        max: 1,
-                        min: -1
-                    }
-                }],
-                xAxes: [{
-                    ticks: {
-                        max: 1,
-                        min: -1
-                    }
-                }]
+
+        Object.size = function (obj) {
+            var size = 0, key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
             }
+            return size;
         };
-        var chart = new Chart('myChart', {
+        context = {{ dataArray | safe }};
+        // dataDict = {
+        //     datasets: [
+        //         {
+        //             label: context[0]['label'],
+        //             data: [{
+        //                 x: context[0]['x'],
+        //                 y: context[0]['y'],
+        //                 v: (context[0]['CR'] + context[0]['PB']),
+        //                 CR: context[0]['CR'],
+        //                 PB: context[0]['PB']
+        //             }]
+        //         }
+        //     ]
+        // }
+        sets = []
+        for (i = 0; i < Object.size(context); ++i) {
+            sets.push(
+                {
+                    label: context[i]['label'],
+                    data: [{
+                        x: context[i]['x'],
+                        y: context[i]['y'],
+                        v: (context[i]['CR'] + context[i]['PB']),
+                        CR: context[i]['CR'],
+                        PB: context[i]['PB']
+                    }]
+                }
+            )
+        }
+        dataDict = {
+            datasets: sets
+        }
+        console.log(dataDict)
+        new Chart(document.getElementById("myChart"), {
             type: 'bubble',
-            data: data,
-            options: options
+            data: dataDict,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return data['datasets'][tooltipItem['datasetIndex']]['label'];
+                        },
+                        afterLabel: function (tooltipItem, data) {
+                            console.log(data['datasets'][tooltipItem['datasetIndex']])
+                            return 'PB:' + data['datasets'][tooltipItem['datasetIndex']]['data'][0]['PB'] +
+                                'CR:' + data['datasets'][tooltipItem['datasetIndex']]['data'][0]['CR']
+                        }
+                    }
+                },
+                aspectRatio: 1,
+                legend: false,
+                elements: {
+                    point: {
+                        backgroundColor: 'rgba(205,0,0,0.5)',
+                        borderWidth: function (context) {
+                            return Math.min(Math.max(1, context.datasetIndex + 1), 8);
+                        },
+                        radius: function (context) {
+                            var value = context.dataset.data[context.dataIndex];
+                            var size = context.chart.width;
+                            var base = Math.abs(value.v) / 1000;
+                            return (size / 24) * base;
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            max: 1,
+                            min: -1
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            max: 1,
+                            min: -1
+                        }
+                    }]
+                }
+            }
+
         });
-        // eslint-disable-next-line no-unused-vars
-        function randomize() {
-            chart.data.datasets.forEach(function (dataset) {
-                dataset.data = generateData();
-            });
-            chart.update();
-        }
-        // eslint-disable-next-line no-unused-vars
-        function addDataset() {
-            chart.data.datasets.push({
-                data: generateData()
-            });
-            chart.update();
-        }
-        // eslint-disable-next-line no-unused-vars
-        function removeDataset() {
-            chart.data.datasets.shift();
-            chart.update();
-        }
     </script> {% endblock %}
