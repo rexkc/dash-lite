@@ -34,20 +34,6 @@
             return size;
         };
         context = {{ dataArray | safe }};
-        // dataDict = {
-        //     datasets: [
-        //         {
-        //             label: context[0]['label'],
-        //             data: [{
-        //                 x: context[0]['x'],
-        //                 y: context[0]['y'],
-        //                 v: (context[0]['CR'] + context[0]['PB']),
-        //                 CR: context[0]['CR'],
-        //                 PB: context[0]['PB']
-        //             }]
-        //         }
-        //     ]
-        // }
         sets = []
         for (i = 0; i < Object.size(context); ++i) {
             sets.push(
@@ -66,8 +52,7 @@
         dataDict = {
             datasets: sets
         }
-        console.log(dataDict)
-        new Chart(document.getElementById("myChart"), {
+        var chart = new Chart(document.getElementById("myChart"), {
             type: 'bubble',
             data: dataDict,
             options: {
@@ -77,7 +62,6 @@
                             return data['datasets'][tooltipItem['datasetIndex']]['label'];
                         },
                         afterLabel: function (tooltipItem, data) {
-                            console.log(data['datasets'][tooltipItem['datasetIndex']])
                             return 'PB:' + data['datasets'][tooltipItem['datasetIndex']]['data'][0]['PB'] +
                                 'CR:' + data['datasets'][tooltipItem['datasetIndex']]['data'][0]['CR']
                         }
@@ -87,7 +71,15 @@
                 legend: false,
                 elements: {
                     point: {
-                        backgroundColor: 'rgba(205,0,0,0.5)',
+                        backgroundColor: function (context) {
+                            var value = context.dataset.data[context.dataIndex]['v'];
+                            if (value > 100) {
+                                return 'rgba(205,0,0,0.5)'
+                            }
+                            else {
+                                return 'rgba(5,100,240,0.5)'
+                            }
+                        },
                         borderWidth: function (context) {
                             return Math.min(Math.max(1, context.datasetIndex + 1), 8);
                         },
@@ -95,7 +87,11 @@
                             var value = context.dataset.data[context.dataIndex];
                             var size = context.chart.width;
                             var base = Math.abs(value.v) / 1000;
-                            return (size / 24) * base;
+                            var radi = (size / 24) * base;
+                            if (radi < 30) {
+                                radi = 30;
+                            }
+                            return radi;
                         }
                     }
                 },
@@ -112,8 +108,15 @@
                             min: -1
                         }
                     }]
+                },
+                onClick: function(e){
+                    var element = this.getElementAtEvent(e);
+                    if (element.length > 0){
+                        var index = element[0]["_index"];
+                        window.location="{{url_for('reports')}}";
+                    }
                 }
             }
 
         });
-    </script> {% endblock %}
+    </script> {% endblock %} 
