@@ -3,8 +3,17 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
     </div>
-    <a href=# class="btn btn-info float-right"
-    role="button">Aspects</a>
+
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-row">
+                <div class="col">{{ form.dateFrom(class_='form-control', placeholder='From (YYYY-MM-DDTHH:MM:SSZ)')}}</div>  
+                <div class="col">{{ form.dateTo(class_='form-control', placeholder='To (YYYY-MM-DDTHH:MM:SSZ)')}}</div>   
+                <div class="col">{{ form.submit(class_="btn btn-outline-info") }}</div>
+                <a href=# style="margin-right: 10px;" class="btn btn-outline-info float-right"role="button">Past Week</a>
+        </div>
+    </form>
+
     <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
 
     <!-- Graphs -->

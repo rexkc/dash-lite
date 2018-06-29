@@ -1,5 +1,8 @@
 from functions import populateFloorplan, plotts, requestHeaders
 from flask import Flask, render_template, jsonify, url_for, flash, request
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
 from random import sample
 import os, datetime
 import numpy as np
@@ -8,6 +11,16 @@ import requests, urllib
 import json
 
 app = Flask(__name__)
+
+class Config(object):
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'locally-debugging'
+
+app.config.from_object(Config)
+
+class dateTimeForm(FlaskForm):
+    dateFrom = StringField('From', validators=[DataRequired()])
+    dateTo = StringField('From', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 @app.route('/')
 def root():
@@ -48,11 +61,24 @@ def assets_aspects(id):
     return render_template('aspects.html', aspects_data = json.loads(response.text))
 
 @app.route("/timeseries/<asset>/<aspect>/<var>", methods=['GET','POST'])
-def timeseries(asset,aspect,var):   
-    url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from=2018-06-18T00:00:00Z&to=2018-06-19T23:50:00Z".format(asset,aspect)
+def timeseries(asset,aspect,var):
+    form = dateTimeForm()
+    if form.validate_on_submit():
+        dateFrom = form.dateFrom.data
+        dateTo = form.dateTo.data
+    else:
+        currentTime = datetime.datetime.utcnow()
+        pastWeekTime = currentTime - datetime.timedelta(days = 7)
+        dateTo = currentTime.isoformat() + 'Z'
+        dateFrom = pastWeekTime.isoformat() + 'Z'
+    url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
     response =requests.get(url, headers=requestHeaders())
     (plotdata,plottime) = plotts(json.loads(response.text),var)
-    return render_template('timeseries.html',plotdata=plotdata,plottime=plottime)
+    return render_template('timeseries.html',plotdata=plotdata,plottime=plottime, form = form)
+
+@app.route("prediction")
+def prediction():
+    return render_template('prediction.html', data = data)
 
 #test if env is in cloud foundry by getting VCAP port
 try:
