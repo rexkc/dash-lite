@@ -22,7 +22,6 @@ def plotts(data,var):
     for i in range(len(data)):
         plotdata.append(data[i][var])
         plottime.append(str(data[i]['_time']))
-    print(plottime)
     return plotdata, plottime
 
 def populateFloorplan(Asset,Aspect,dateFrom,dateTo):
@@ -42,5 +41,4 @@ def populateFloorplan(Asset,Aspect,dateFrom,dateTo):
     bwGnd = [x for x in raw_dict if x['locationCode'] == 30206] # filter for B3 Gnd To Link
     counts = Counter(c['messageCode'] for c in bwGnd) # get counts of message occurances
     dataArray.append({'label' : 'B3 Gnd To Link', 'x': 0.76, 'y': -0.2, 'PB': counts[17300], 'CR' : counts[17200]}) # add data to array
-    print(dataArray)
     return dataArray

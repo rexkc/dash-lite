@@ -1,13 +1,10 @@
 from functions import populateFloorplan, plotts, requestHeaders
 from flask import Flask, render_template, jsonify, url_for, flash, request
 from random import sample
-import os
-import datetime
+import os, datetime
 import numpy as np
 import plotly
-import pandas as pd
-import requests
-import urllib
+import requests, urllib
 import json
 
 app = Flask(__name__)

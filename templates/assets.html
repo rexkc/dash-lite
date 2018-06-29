@@ -5,7 +5,7 @@
     </div>
     {% for asset in assets_data._embedded.assets %} {% if asset.name != '(DELETED)'%}
     <div class="card">
-        <p>Name: {{asset.name}}, ID: {{asset.assetId}},
+        <p><span data-feather="box"></span>Name: {{asset.name}}, ID: {{asset.assetId}},
             <a href="{{url_for('assets_aspects', id=asset.assetId)}}" class="btn btn-info float-right"
                 role="button">Aspects</a>
         </p>

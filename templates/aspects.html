@@ -1,17 +1,23 @@
 {% extends 'main.html' %} {% block body %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Aspect List</h1>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/assets">Assets</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Aspects</li>
+            </ol>
+          </nav>
     </div>
 
     <div class="card">
         {% for aspect in aspects_data._embedded.aspects %}
         <div class="card-header">
-            <p>Aspect Name: {{aspect.name}}, Category: {{aspect.category}}, Description: {{aspect.description}}</p>
+            <p><b>Aspect Name: {{aspect.name}}, Category: {{aspect.category}}, Description: {{aspect.description}}</b></p>
         </div>
         <ul class="list-group list-group-flush"></ul>
         {% for variable in aspect.variables %}
-        <p>Variable Name: {{variable.name}}, Unit: {{variable.unit}}, Datatype: {{variable.dataType}}
+        <p><span data-feather="corner-down-right"></span> Variable Name: {{variable.name}}, Unit: {{variable.unit}}, Datatype: {{variable.dataType}}
             <a href="{{ url_for('timeseries',asset=aspect.holderAssetId,aspect=aspect.name,var = variable.name)}}" class="btn btn-info float-right"
                 role="button">Plot Variable</a>
             {% endfor %} {% endfor %}

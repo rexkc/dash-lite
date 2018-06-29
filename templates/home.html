@@ -1,71 +1,38 @@
 {% extends 'main.html' %}
 
 {% block body %}
-<head>
-    <style>
-        body { text-align: center; font: 16px/1.4 "Helvetica Neue", Arial, sans-serif; }
-        a { color: #0077ff; }
-        .container { width: 1000px; height: 600px; margin: 0 auto; position: relative; border: 1px solid #ccc; }
-        .options { position: absolute; top: 0; right: 0; padding: 10px; background: rgba(255,255,255,0.6);
-            border-bottom: 1px solid #ccc; border-left: 1px solid #ccc; line-height: 1; }
-        .options input { width: 200px; }
-        .options label { width: 60px; float: left; text-align: right; margin-right: 10px; color: #555; }
-        .ghbtns { position: relative; top: 4px; margin-left: 5px; }
-        #canvas{
-            background-image:    url(../static/floorPlan.JPG);
-            background-size:     cover;                      
-            background-repeat:   no-repeat;
-            background-position: center center; 
-        }
-    </style>
-</head>
-<body>
-    
-<div class="container">
-    <div class="options">
-        <label>Radius </label><input type="range" id="radius" value="25" min="10" max="50" /><br />
-        <label>Blur </label><input type="range" id="blur" value="15" min="10" max="50" />
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
     </div>
-    <canvas id="canvas" width="900" height="600"></canvas>
-</div>
 
-<script src="{{ url_for('static', filename='simpleheat.js')}}"></script>
-<script src="{{ url_for('static', filename='data.js')}}"></script>
-<script>
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="masthead mb-auto">
+      <div class="inner">
+        <h3 class="masthead-brand">Cover</h3>
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link active" href="#">Home</a>
+          <a class="nav-link" href="#">Features</a>
+          <a class="nav-link" href="#">Contact</a>
+        </nav>
+      </div>
+    </header>
 
-window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                               window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    <main role="main" class="inner cover">
+      <h1 class="cover-heading">Cover your page.</h1>
+      <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+      <p class="lead">
+        <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+      </p>
+    </main>
 
-function get(id) {
-    return document.getElementById(id);
-}
 
-var heat = simpleheat('canvas').data(data).max(18),
-    frame;
-
-function draw() {
-    console.time('draw');
-    heat.draw();
-    console.timeEnd('draw');
-    frame = null;
-}
-
-draw();
-
-get('canvas').onmousemove = function (e) {
-    heat.add([e.layerX, e.layerY, 1]);
-    frame = frame || window.requestAnimationFrame(draw);
-};
-
-var radius = get('radius'),
-    blur = get('blur'),
-    changeType = 'oninput' in radius ? 'oninput' : 'onchange';
-
-radius[changeType] = blur[changeType] = function (e) {
-    heat.radius(+radius.value, +blur.value);
-    frame = frame || window.requestAnimationFrame(draw);
-};
-
-</script>
-</body>
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
 {% endblock %}
