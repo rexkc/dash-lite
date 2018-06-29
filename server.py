@@ -17,9 +17,12 @@ class Config(object):
 
 app.config.from_object(Config)
 
-class dateTimeForm(FlaskForm):
+class resuableForm(FlaskForm):
     dateFrom = StringField('From', validators=[DataRequired()])
     dateTo = StringField('From', validators=[DataRequired()])
+    power = StringField('Power', validators=[DataRequired()])
+    temperature = StringField('Temperature', validators=[DataRequired()])
+    pressure = StringField('Pressure', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 @app.route('/')
@@ -62,7 +65,7 @@ def assets_aspects(id):
 
 @app.route("/timeseries/<asset>/<aspect>/<var>", methods=['GET','POST'])
 def timeseries(asset,aspect,var):
-    form = dateTimeForm()
+    form = resuableForm()
     if form.validate_on_submit():
         dateFrom = form.dateFrom.data
         dateTo = form.dateTo.data
@@ -76,9 +79,10 @@ def timeseries(asset,aspect,var):
     (plotdata,plottime) = plotts(json.loads(response.text),var)
     return render_template('timeseries.html',plotdata=plotdata,plottime=plottime, form = form)
 
-@app.route("prediction")
+@app.route("/predict")
 def prediction():
-    return render_template('prediction.html', data = data)
+    form = resuableForm()
+    return render_template('predict.html', form = form)
 
 #test if env is in cloud foundry by getting VCAP port
 try:

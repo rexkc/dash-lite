@@ -1,0 +1,20 @@
+{% extends 'main.html' %}
+
+{% block body %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Prediction</h1>
+  </div>
+
+  <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form">
+                <div>Power data: {{ form.power(class_='form-control', placeholder='Power')}}</div>  
+                <div>Temperature data :{{ form.temperature(class_='form-control', placeholder='Temperature')}}</div> 
+                <div>Pressure data: {{ form.pressure(class_='form-control', placeholder='Pressure')}}</div>   
+                <div>
+                   {{ form.submit(class_="btn btn-outline-info") }}</div>
+        </div>
+    </form>
+
+{% endblock %}
