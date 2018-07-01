@@ -81,8 +81,43 @@ def timeseries(asset,aspect,var):
 
 @app.route("/predict")
 def prediction():
-    form = resuableForm()
-    return render_template('predict.html', form = form)
+    body = {}
+    body['modelConfiguration'] = {'polynomialDegree' : 1}
+    body['metadataConfiguration'] = {
+        'outputVariable' : {
+            'entityId' : 'Weather',
+            'propertySetName': 'tempSensor',
+            'propertyName': 'temperature'
+            },
+        "inputVariables": [{
+            "entityId": "Weather",
+            "propertySetName": "windDetector",
+            "propertyName": "windSpeed"
+            }]
+        }
+    body['trainingData'] = {
+        "variable": {
+        "entityId": "Weather",
+        "propertySetName": "tempSensor"
+      },
+      "timeSeries": [
+        {
+          "_time": "2017-10-01T12:00:00.001Z",
+          "powerOutputSensor": "20.0"
+        },
+        {
+          "_time": "2017-10-01T12:00:00.002Z",
+          "powerOutputSensor": "21.0"
+        },
+        {
+          "_time": "2017-10-01T12:00:00.003Z",
+          "powerOutputSensor": "23.0"
+        }
+      ]
+    }
+
+    return jsonify(body)
+    # return render_template('predict.html', form = form)
 
 #test if env is in cloud foundry by getting VCAP port
 try:
