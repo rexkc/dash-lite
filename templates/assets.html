@@ -7,7 +7,7 @@
         {% if asset.name != '(DELETED)'%}
         <div class="card">
             <div class="card-body">
-                <i data-feather="box"></i>Name: {{asset.name}}, ID: {{asset.assetId}},
+                <i data-feather="box"></i> <b>Name:</b> {{asset.name}}, <b>ID:</b> {{asset.assetId}},
                 <a href="{{url_for('assets_aspects', id=asset.assetId)}}" class="btn btn-info float-right"
                     role="button">Aspects</a>
             </div>
