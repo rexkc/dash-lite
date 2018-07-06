@@ -1,21 +1,23 @@
 {% extends 'main.html' %} {% block body %}
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
     </div>
-
-    <form action="" method="get" novalidate>
-        {{ form.hidden_tag() }}
-        <div class="form-row">
-                <div class="col">{{ form.dateFrom(class_='form-control', placeholder='From (YYYY-MM-DDTHH:MM:SSZ)')}}</div>  
-                <div class="col">{{ form.dateTo(class_='form-control', placeholder='To (YYYY-MM-DDTHH:MM:SSZ)')}}</div>   
-                <div class="col">{{ form.submit(class_="btn btn-outline-info") }}</div>
-                <a href=# style="margin-right: 10px;" class="btn btn-outline-info float-right"role="button">Past Week</a>
+    <div class="card">
+        <div class="card-header">
+            <form action="" method="get" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="form-row">
+                        <div class="col">{{ form.dateFrom(class_='form-control', placeholder='From (YYYY-MM-DDTHH:MM:SSZ)')}}</div>  
+                        <div class="col">{{ form.dateTo(class_='form-control', placeholder='To (YYYY-MM-DDTHH:MM:SSZ)')}}</div>   
+                        <div class="col">{{ form.submit(class_="btn btn-outline-info") }}</div>
+                        <a href=# style="margin-right: 10px;" class="btn btn-outline-info float-right"role="button">Past Week</a>
+                </div>
+            </form>
         </div>
-    </form>
-
-    <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
+        <div class="card-body">
+            <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+        </div>
+    </div>
     <!-- Graphs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
