@@ -12,111 +12,111 @@
     <!-- <script src="{{ url_for('static', filename='utils.js')}}"></script> -->
 </head>
 
-    <div class="card">
-        <div class="card-header">
-            <b>BW-Building 3</b>
-        </div>
-        <div class="card-body">
-            <canvas id="myChart" width="900" height="600"></canvas>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <b>BW-Building 3</b>
     </div>
+    <div class="card-body">
+        <canvas id="myChart" width="900" height="600"></canvas>
+    </div>
+</div>
 
-    <!-- Graphs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
+<!-- Graphs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
 
-        Object.size = function (obj) {
-            var size = 0, key;
-            for (key in obj) {
-                if (obj.hasOwnProperty(key)) size++;
+    Object.size = function (obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
+    context = {{ dataArray | safe }};
+    sets = []
+    for (i = 0; i < Object.size(context); ++i) {
+        sets.push(
+            {
+                label: context[i]['label'],
+                data: [{
+                    x: context[i]['x'],
+                    y: context[i]['y'],
+                    v: (context[i]['CR'] + context[i]['PB']),
+                    CR: context[i]['CR'],
+                    PB: context[i]['PB']
+                }]
             }
-            return size;
-        };
-        context = {{ dataArray | safe }};
-        sets = []
-        for (i = 0; i < Object.size(context); ++i) {
-            sets.push(
-                {
-                    label: context[i]['label'],
-                    data: [{
-                        x: context[i]['x'],
-                        y: context[i]['y'],
-                        v: (context[i]['CR'] + context[i]['PB']),
-                        CR: context[i]['CR'],
-                        PB: context[i]['PB']
-                    }]
-                }
-            )
-        }
-        dataDict = {
-            datasets: sets
-        }
-        var chart = new Chart(document.getElementById("myChart"), {
-            type: 'bubble',
-            data: dataDict,
-            options: {
-                tooltips: {
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            return data['datasets'][tooltipItem['datasetIndex']]['label'];
-                        },
-                        afterLabel: function (tooltipItem, data) {
-                            return 'PB:' + data['datasets'][tooltipItem['datasetIndex']]['data'][0]['PB'] +
-                                'CR:' + data['datasets'][tooltipItem['datasetIndex']]['data'][0]['CR']
-                        }
-                    }
-                },
-                aspectRatio: 1,
-                legend: false,
-                elements: {
-                    point: {
-                        backgroundColor: function (context) {
-                            var value = context.dataset.data[context.dataIndex]['v'];
-                            if (value > 100) {
-                                return 'rgba(205,0,0,0.5)'
-                            }
-                            else {
-                                return 'rgba(5,100,240,0.5)'
-                            }
-                        },
-                        borderWidth: function (context) {
-                            return Math.min(Math.max(1, context.datasetIndex + 1), 8);
-                        },
-                        radius: function (context) {
-                            var value = context.dataset.data[context.dataIndex];
-                            var size = context.chart.width;
-                            var base = Math.abs(value.v) / 1000;
-                            var radi = (size / 24) * base;
-                            if (radi < 30) {
-                                radi = 30;
-                            }
-                            return radi;
-                        }
-                    }
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            max: 1,
-                            min: -1
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            max: 1,
-                            min: -1
-                        }
-                    }]
-                },
-                onClick: function(e){
-                    var element = this.getElementAtEvent(e);
-                    if (element.length > 0){
-                        var index = element[0]["_index"];
-                        window.location="{{url_for('reports')}}";
+        )
+    }
+    dataDict = {
+        datasets: sets
+    }
+    var chart = new Chart(document.getElementById("myChart"), {
+        type: 'bubble',
+        data: dataDict,
+        options: {
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        return data['datasets'][tooltipItem['datasetIndex']]['label'];
+                    },
+                    afterLabel: function (tooltipItem, data) {
+                        return 'PB:' + data['datasets'][tooltipItem['datasetIndex']]['data'][0]['PB'] +
+                            'CR:' + data['datasets'][tooltipItem['datasetIndex']]['data'][0]['CR']
                     }
                 }
+            },
+            aspectRatio: 1,
+            legend: false,
+            elements: {
+                point: {
+                    backgroundColor: function (context) {
+                        var value = context.dataset.data[context.dataIndex]['v'];
+                        if (value > 100) {
+                            return 'rgba(205,0,0,0.5)'
+                        }
+                        else {
+                            return 'rgba(5,100,240,0.5)'
+                        }
+                    },
+                    borderWidth: function (context) {
+                        return Math.min(Math.max(1, context.datasetIndex + 1), 8);
+                    },
+                    radius: function (context) {
+                        var value = context.dataset.data[context.dataIndex];
+                        var size = context.chart.width;
+                        var base = Math.abs(value.v) / 1000;
+                        var radi = (size / 24) * base;
+                        if (radi < 30) {
+                            radi = 30;
+                        }
+                        return radi;
+                    }
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        max: 1,
+                        min: -1
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        max: 1,
+                        min: -1
+                    }
+                }]
+            },
+            onClick: function (e) {
+                var element = this.getElementAtEvent(e);
+                if (element.length > 0) {
+                    var index = element[0]["_index"];
+                    window.location = "{{url_for('reports')}}";
+                }
             }
+        }
 
-        });
-    </script> {% endblock %} 
+    });
+</script> {% endblock %}

@@ -1,6 +1,10 @@
 import requests
 import os
 import json
+import numpy as np
+import pandas as pd
+import plotly
+import plotly.graph_objs as go
 from flask import request
 from collections import Counter
 from vars import token
@@ -20,9 +24,21 @@ def plotts(data,var):
     plotdata = []
     plottime = []
     for i in range(len(data)):
-        plotdata.append(data[i][var])
-        plottime.append(str(data[i]['_time']))
-    return plotdata, plottime
+        try:
+            plotdata.append(data[i][var])
+            plottime.append(str(data[i]['_time']))
+        except:
+            pass # ignore datapoints without the variable
+
+    graph = dict(
+        data=[go.Scatter(
+            x= plottime,
+            y= plotdata
+        )]
+    )
+    graphJSON = json.dumps(graph, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON
+
 
 def populateFloorplan(Asset,Aspect,dateFrom,dateTo):
     # create request url

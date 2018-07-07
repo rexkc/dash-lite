@@ -1,7 +1,16 @@
 {% extends 'main.html' %} {% block body %}
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-    </div>
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="/home">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="/assets">Assets</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{{url_for('assets_aspects', id=asset)}}">{{aspect}}</a>
+    </li>
+    <li class="breadcrumb-item active">{{var}}</li>
+</ol>
     <div class="card">
         <div class="card-header">
             <form action="" method="get" novalidate>
@@ -15,42 +24,16 @@
             </form>
         </div>
         <div class="card-body">
-            <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+            <div id="myDiv"></div>
         </div>
     </div>
-    <!-- Graphs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
     <script>
-        var plotdata = JSON.parse('{{plotdata}}');
-        var plottime = {{ plottime| safe}};
-
-        var ctx = document.getElementById("myChart");
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: plottime,
-                datasets: [{
-                    data: plotdata,
-                    lineTension: 0,
-                    backgroundColor: 'transparent',
-                    borderColor: '#007bff',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#007bff'
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: false
-                        }
-                    }]
-                },
-                legend: {
-                    display: false,
-                }
-            }
-        });
-
+        var plotdata = {{graphJSON | safe}}
+        console.log(plotdata)
+        Plotly.newPlot('myDiv', plotdata);
     </script> {% endblock %}

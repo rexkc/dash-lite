@@ -1,46 +1,30 @@
-{% extends 'main.html' %}
-
-{% block body %}
+{% extends 'main.html' %} {% block body %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h1 class="h2">Dashboard</h1>
 </div>
+<div class="card">
+  <div class="card-body">
+    <div id="myDiv"></div>
+  </div>
+</div>
 
-<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
+<!-- Plotly.js -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <!-- Graphs -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
 
-  var getData = $.get('/data');
-  getData.done(function(results){
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        datasets: [{
-          data: results.data,
-          lineTension: 0,
-          backgroundColor: 'transparent',
-          borderColor: '#007bff',
-          borderWidth: 4,
-          pointBackgroundColor: '#007bff'
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: false
-            }
-          }]
-        },
-        legend: {
-          display: false,
-        }
-      }
+  var Timer = 1000 // 1 second
+  window.onload = ajaxUpdate(); //When page loads start the AJAX function
+
+  //AJAX function
+  function ajaxUpdate() {
+    var Datastream = setInterval(IntervalFunction, Timer);
+  }
+
+  function IntervalFunction() {
+    var getPlotData = $.getJSON('/data');
+    getPlotData.done(function (results) {
+      Plotly.newPlot('myDiv', results.data);
     });
-  });
-</script>
-{% endblock %}
+  }
+</script> {% endblock %}

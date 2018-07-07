@@ -3,10 +3,11 @@ from flask import Flask, render_template, jsonify, url_for, flash, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
-from random import sample
 import os, datetime
 import numpy as np
+import pandas as pd
 import plotly
+import plotly.graph_objs as go
 import requests, urllib
 import json
 
@@ -35,7 +36,6 @@ def home():
 
 @app.route('/reports')
 def reports():
-    print(os.getenv("VCAP_APP_PORT"))
     return render_template("reports.html")
 
 @app.route('/floorplan')
@@ -45,13 +45,24 @@ def floorplan():
 
 @app.route('/data')
 def data():
-    return jsonify({'data' : sample(range(10000,20000),100)})
+    N = 500
+    random_x = np.linspace(0, 1, N)
+    random_y = np.random.randn(N)
+    graph = dict(
+        data=[go.Scatter(
+            x= random_x,
+            y= random_y
+        )]
+    )
+    graphJSON = json.dumps(graph, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON
 
 @app.route('/assets')
 def assets():
     url = 'https://gateway.eu1.mindsphere.io/api/assetmanagement/v3/assets/?size=200'
     response = requests.get(url, headers=requestHeaders())
     data = json.loads(response.text)
+    # setup for hiding deleted assets
     for i in range(len(data['_embedded']['assets'])):
         if '152' in data['_embedded']['assets'][i]['name']:
             data['_embedded']['assets'][i]['name'] = '(DELETED)'
@@ -74,10 +85,13 @@ def timeseries(asset,aspect,var):
         pastWeekTime = currentTime - datetime.timedelta(days = 7)
         dateTo = currentTime.isoformat() + 'Z'
         dateFrom = pastWeekTime.isoformat() + 'Z'
+    print(dateFrom)
+    print(dateTo)
     url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
     response =requests.get(url, headers=requestHeaders())
-    (plotdata,plottime) = plotts(json.loads(response.text),var)
-    return render_template('timeseries.html',plotdata=plotdata,plottime=plottime, form = form)
+    graphJSON = plotts(json.loads(response.text),var)
+    # return render_template('timeseries.html',graphJSON = graphJSON, form = form, asset = asset, aspect = aspect, var = var)
+    return jsonify(response.text)
 
 @app.route("/predict")
 def prediction():
