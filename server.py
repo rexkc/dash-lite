@@ -82,7 +82,7 @@ def timeseries(asset,aspect,var):
         dateTo = form.dateTo.data
     else:
         currentTime = datetime.datetime.utcnow()
-        pastDayTime = currentTime - datetime.timedelta(days = 1)
+        pastDayTime = currentTime - datetime.timedelta(days = 7)
         dateTo = currentTime.isoformat() + 'Z'
         dateFrom = pastDayTime.isoformat() + 'Z'
     print(dateFrom)

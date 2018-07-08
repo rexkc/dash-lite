@@ -4,27 +4,52 @@
 </div>
 <div class="card">
   <div class="card-body">
-    <div id="myDiv"></div>
+    <div id="graph"></div>
   </div>
 </div>
 
 <!-- Plotly.js -->
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <!-- Graphs -->
 <script>
-
-  var Timer = 1000 // 1 second
-  window.onload = ajaxUpdate(); //When page loads start the AJAX function
-
-  //AJAX function
-  function ajaxUpdate() {
-    var Datastream = setInterval(IntervalFunction, Timer);
-  }
-
-  function IntervalFunction() {
-    var getPlotData = $.getJSON('/data');
-    getPlotData.done(function (results) {
-      Plotly.newPlot('myDiv', results.data);
+  var getPlotData = $.getJSON('/data');
+  getPlotData.done(function (results) {
+    Plotly.newPlot('graph', {
+      data: [{
+        y: results.data[0].y,
+        x: results.data[0].x
+      }],
+      traces: [0],
+      layout: {
+        title: 'Time series with range slider',
+        xaxis: {
+          title:"index",
+          rangeslider: {}
+        },
+        yaxis: {
+          title:"signal",
+          fixedrange: true
+        }
+      }
     });
+  });
+  window.onload = function ajaxUpdate() {
+    var Datastream = setInterval(function IntervalFunction() {
+      var getPlotData = $.getJSON('/data');
+      getPlotData.done(function (results) {
+        Plotly.animate('graph', {
+          data: [{ y: results.data[0].y }],
+        }, {
+            transition: {
+              duration: 1000,
+              easing: 'cubic-in-out'
+            }
+          })
+      });
+    },
+      1000); // Interval time set to 1 second
   }
+
+
 </script> {% endblock %}

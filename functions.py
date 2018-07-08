@@ -31,7 +31,17 @@ def plotts(data,var):
         data=[go.Scatter(
             x= plottime,
             y= plotdata
-        )]
+        )],
+        layout=dict(
+            title=var,
+            yaxis=dict(
+                title="value"
+            ),
+            xaxis=dict(
+                title="time",
+                rangeslider={}
+            )
+        )
     )
     graphJSON = json.dumps(graph, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
