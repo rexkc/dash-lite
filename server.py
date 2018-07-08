@@ -93,7 +93,11 @@ def timeseries(asset,aspect,var):
     return render_template('timeseries.html',graphJSON = graphJSON, form = form, asset = asset, aspect = aspect, var = var)
 
 @app.route("/analytics")
-def prediction():
+def analytics():
+    return render_template('analytics.html')
+
+@app.route("/predict")
+def predict():
     body = {}
     body['modelConfiguration'] = {'polynomialDegree' : 1}
     body['metadataConfiguration'] = {
@@ -128,7 +132,10 @@ def prediction():
         }
       ]
     }
-    return render_template('analytics.html')
+    return render_template('a_trend.html')
+
+
+
 
 #test if env is in cloud foundry by getting VCAP port
 try:
