@@ -17,9 +17,6 @@ def requestHeaders():
         headers = {'Authorization': 'Bearer ' + token['access_token']}
     return headers
 
-def locationMapping():
-    return
-
 def plotts(data,var):
     plotdata = []
     plottime = []

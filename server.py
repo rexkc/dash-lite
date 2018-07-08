@@ -82,18 +82,17 @@ def timeseries(asset,aspect,var):
         dateTo = form.dateTo.data
     else:
         currentTime = datetime.datetime.utcnow()
-        pastWeekTime = currentTime - datetime.timedelta(days = 7)
+        pastDayTime = currentTime - datetime.timedelta(days = 1)
         dateTo = currentTime.isoformat() + 'Z'
-        dateFrom = pastWeekTime.isoformat() + 'Z'
+        dateFrom = pastDayTime.isoformat() + 'Z'
     print(dateFrom)
     print(dateTo)
     url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
     response =requests.get(url, headers=requestHeaders())
     graphJSON = plotts(json.loads(response.text),var)
-    # return render_template('timeseries.html',graphJSON = graphJSON, form = form, asset = asset, aspect = aspect, var = var)
-    return jsonify(response.text)
+    return render_template('timeseries.html',graphJSON = graphJSON, form = form, asset = asset, aspect = aspect, var = var)
 
-@app.route("/predict")
+@app.route("/analytics")
 def prediction():
     body = {}
     body['modelConfiguration'] = {'polynomialDegree' : 1}
@@ -129,9 +128,7 @@ def prediction():
         }
       ]
     }
-
-    return jsonify(body)
-    # return render_template('predict.html', form = form)
+    return render_template('analytics.html')
 
 #test if env is in cloud foundry by getting VCAP port
 try:
