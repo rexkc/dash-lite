@@ -85,10 +85,9 @@ def timeseries(asset,aspect,var):
         pastDayTime = currentTime - datetime.timedelta(days = 7)
         dateTo = currentTime.isoformat() + 'Z'
         dateFrom = pastDayTime.isoformat() + 'Z'
-    print(dateFrom)
-    print(dateTo)
     url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
     response =requests.get(url, headers=requestHeaders())
+    print(url)
     graphJSON = plotts(json.loads(response.text),var)
     return render_template('timeseries.html',graphJSON = graphJSON, form = form, asset = asset, aspect = aspect, var = var)
 
