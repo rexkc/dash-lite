@@ -28,7 +28,7 @@ class resuableForm(FlaskForm):
 
 @app.route('/')
 def root():
-    return render_template("home.html")
+    return render_template("b_buttonData.html")
 
 @app.route('/home')
 def home():
@@ -36,7 +36,7 @@ def home():
 
 @app.route('/reports')
 def reports():
-    return render_template("reports.html")
+    return render_template("/unearthed/leaderboard.html")
 
 @app.route('/floorplan')
 def floorplan():
@@ -93,7 +93,7 @@ def timeseries(asset,aspect,var):
 
 @app.route("/analytics")
 def analytics():
-    return render_template('analytics.html')
+    return render_template('unearthed/team.html')
 
 @app.route("/predict")
 def predict():
@@ -135,6 +135,25 @@ def predict():
 
 
 
+@app.route('/buttondata')
+def buttondata():
+    asset = '6ccc6331c8604963b206d4f8ff73af2b'
+    aspect = 'anglobutton'
+    dateFrom = "2018-07-12T00:00:00Z"
+    dateTo = "2018-07-18T00:00:00Z"
+    url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
+    response =requests.get(url, headers=requestHeaders())
+    return render_template('b_buttonData.html',data = json.loads(response.text))
+
+@app.route('/getbuttondata')
+def getbuttondata():
+    asset = '6ccc6331c8604963b206d4f8ff73af2b'
+    aspect = 'anglobutton'
+    dateFrom = "2018-07-12T00:00:00Z"
+    dateTo = "2018-07-18T00:00:00Z"
+    url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
+    response =requests.get(url, headers=requestHeaders())
+    return jsonify(response.text)
 
 #test if env is in cloud foundry by getting VCAP port
 try:

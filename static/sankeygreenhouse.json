@@ -1,0 +1,172 @@
+{
+    "links": [
+        {
+            "source": "Stone dusting",
+            "target": "Lawrence",
+            "value": "20"
+        }, 
+        {
+            "source": "Stone dusting",
+            "target": "Dan",
+            "value": "5"
+        },
+        {
+            "source": "Vent tubes",
+            "target": "Anton",
+            "value": "10"
+        },
+        {
+            "source": "Vent tubes",
+            "target": "Stewart",
+            "value": "10"
+        },
+        {
+            "source": "Mucking",
+            "target": "Dan",
+            "value": "15"
+        },
+        {
+            "source": "Grouting",
+            "target": "Alex",
+            "value": "15"
+        },
+        {
+            "source": "Consumables",
+            "target": "Bolts",
+            "value": "2"
+        },
+        {
+            "source": "Consumables",
+            "target": "Washers",
+            "value": "3"
+        },
+        {
+            "source": "Consumables",
+            "target": "Chemicals",
+            "value": "1"
+        },
+        {
+            "source": "Consumables",
+            "target": "Mesh",
+            "value": "5"
+        },
+        {
+            "source": "Services",
+            "target": "Cables",
+            "value": "5"
+        },
+        {
+            "source": "Services",
+            "target": "Pipes",
+            "value": "8"
+        },
+        {
+            "source": "Services",
+            "target": "Comms",
+            "value": "1"
+        },
+        {
+            "source": "Bolts",
+            "target": "Lauren",
+            "value": "2"
+        },
+        {
+            "source": "Washers",
+            "target": "Mats",
+            "value": "3"
+        },
+        {
+            "source": "Chemicals",
+            "target": "Lauren",
+            "value": "1"
+        },
+        {
+            "source": "Mesh",
+            "target": "Michael",
+            "value": "5"
+        },
+        {
+            "source": "Cables",
+            "target": "Mats",
+            "value": "5"
+        },
+        {
+            "source": "Pipes",
+            "target": "Scott",
+            "value": "8"
+        },
+        {
+            "source": "Comms",
+            "target": "Michael",
+            "value": "1"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "Stone dusting"
+        },
+        {
+            "name": "Vent tubes"
+        },
+        {
+            "name": "Mucking"
+        },
+        {
+            "name": "Grouting"
+        },
+        {
+            "name": "Consumables"
+        },
+        {
+            "name": "Bolts"
+        },
+        {
+            "name": "Washers"
+        },
+        {
+            "name": "Chemicals"
+        },
+        {
+            "name": "Mesh"
+        },
+        {
+            "name": "Services"
+        },
+        {
+            "name": "Cables"
+        },
+        {
+            "name": "Pipes"
+        },
+        {
+            "name": "Comms"
+        },
+        {
+            "name": "Lawrence"
+        },
+        {
+            "name": "Dan"
+        },
+        {
+            "name": "Anton"
+        },
+        {
+            "name": "Stewart"
+        },
+        {
+            "name": "Alex"
+        },
+        {
+            "name": "Lauren"
+        },
+        {
+            "name": "Mats"
+        },
+        {
+            "name": "Michael"
+        },
+        {
+            "name": "Scott"
+        }
+    ]
+}

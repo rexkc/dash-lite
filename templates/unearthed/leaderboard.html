@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<head>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+    }
+
+    .bg {
+      /* The image used */
+      background-image: url("../static/background.png");
+
+      /* Full height */
+      height: 100%;
+
+      /* Center and scale the image nicely */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  </style>
+
+  <title>Leaderboard</title>
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body background-image=url( "/background.png") background-repeat="no-repeat">
+
+  <div id="_mscontent">
+    <div class="bg" style="display: flex;">
+      <div class="row">
+        <div class="col 10 offset-s4">
+          <img class="responsive-img" src="../static/banner.jpg">
+        </div>
+        <div class="container" style="background-color: rgba(255,255,255,0.82); display: flex; vertical-align: middle; margin: auto !important;">
+          <div class="col s12">
+            <canvas id="competition" style="height: 500px !important;"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+  <script>
+    var originalLineDraw = Chart.controllers.horizontalBar.prototype.draw;
+    Chart.helpers.extend(Chart.controllers.horizontalBar.prototype, {
+
+      draw: function () {
+        originalLineDraw.apply(this, arguments);
+
+        var chart = this.chart;
+        var ctx = chart.chart.ctx;
+
+        var index = chart.config.options.lineAtIndex;
+        if (index) {
+
+          var xaxis = chart.scales['x-axis-0'];
+          var yaxis = chart.scales['y-axis-0'];
+
+          var x1 = xaxis.getPixelForValue(index);
+          var y1 = yaxis.top;
+
+          var x2 = xaxis.getPixelForValue(index);
+          var y2 = yaxis.bottom;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineWidth = 5;
+          ctx.strokeStyle = 'green';
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+
+          ctx.restore();
+        }
+      }
+    });
+
+    data = {
+      datasets: [{
+        data: [25, 20, 16, 15, 11, 6],
+
+        backgroundColor: [
+          'rgb(31, 119, 180)',
+          'rgb(255, 127, 14)',
+          'rgb(174, 199, 232)',
+          'rgb(255, 187, 120)',
+          'rgb(44, 160, 44)',
+          'rgb(197, 176, 213)'
+        ]
+      }],
+
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: [
+        'Team E',
+        'Team C',
+        'Team A',
+        'Team B',
+        'Team F',
+        'Team D'
+      ]
+    };
+
+    options = {
+      lineAtIndex: 15,
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [{
+          gridLines: {
+            offsetGridLines: true
+          },
+          ticks: {
+            min: 0
+          }
+        }]
+      },
+      annotation: {
+        annotations: [{
+          type: 'line',
+          mode: 'horizontal',
+          scaleID: 'y-axis-0',
+          value: 10,
+          borderColor: 'rgb(75, 192, 192)',
+          borderWidth: 10,
+          label: {
+            enabled: false,
+            content: 'Test label'
+          }
+        }]
+      }
+    };
+
+    var elem = document.getElementById("competition");
+    var ctx = elem.getContext('2d');
+    var teamsChart = new Chart(ctx, {
+      type: 'horizontalBar',
+      data: data,
+      options: options,
+    });
+    elem.onclick = function (evt) {
+      var activePoint = teamsChart.getElementAtEvent(evt);
+      console.log('activePoint', activePoint)
+      // var url = ... make link with data from activePoint
+      window.location = 'team.html'
+    };
+  </script>
+
+
+  <!-- MindSphere OS bar -->
+  <script src="https://static.eu1.mindsphere.io/osbar/js/main.min.js"></script>
+  <script>
+    _msb.init({
+      title: "Team Overview",
+      appId: "_mscontent"
+    });
+  </script>
+
+</body>
+
+</html>

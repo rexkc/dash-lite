@@ -1,0 +1,38 @@
+{% extends 'main.html' %} {% block body %}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <h1 class="cover-heading">Raw data from IoT button</h1>
+        <table class="table table-responsive-sm table-hover table-outline mb-0 table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>Timestamp</th>
+                    <th>UID</th>
+                    <th>Job_ID</th>
+                    <th>Activity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for idx in data %}
+                <tr>
+                    <td>
+                        {{idx.timestamp}}
+                    </td>
+                    <td>
+                        {{idx.UID}}
+                    </td>
+                    <td>
+                        {{idx.Job_ID}}
+                    </td>
+                    <td>
+                        {{idx.state}}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{% endblock %}
