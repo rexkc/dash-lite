@@ -1,11 +1,9 @@
-from functions import populateFloorplan, plotts, requestHeaders
+from functions import plotts, requestHeaders
 from flask import Flask, render_template, jsonify, url_for, flash, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
 import os, datetime
-import numpy as np
-import pandas as pd
 import plotly
 import plotly.graph_objs as go
 import requests, urllib
@@ -28,44 +26,17 @@ class resuableForm(FlaskForm):
 
 @app.route('/')
 def root():
-    return render_template("b_buttonData.html")
+    return render_template("home.html")
 
 @app.route('/home')
 def home():
     return render_template("home.html")
 
-@app.route('/reports')
-def reports():
-    return render_template("/unearthed/leaderboard.html")
-
-@app.route('/floorplan')
-def floorplan():
-    dataArray = populateFloorplan('58c75abe35a24a57a18754170d498f4e','BuildingSecurityAspect','2017-11-30T00:00:00Z','2017-12-07T00:00:00Z')
-    return render_template("floorplan.html",dataArray = dataArray)
-
-@app.route('/data')
-def data():
-    N = 500
-    random_x = np.linspace(0, 1, N)
-    random_y = np.random.randn(N)
-    graph = dict(
-        data=[go.Scatter(
-            x= random_x,
-            y= random_y
-        )]
-    )
-    graphJSON = json.dumps(graph, cls=plotly.utils.PlotlyJSONEncoder)
-    return graphJSON
-
 @app.route('/assets')
 def assets():
-    url = 'https://gateway.eu1.mindsphere.io/api/assetmanagement/v3/assets/?size=200'
+    url = 'https://gateway.eu1.mindsphere.io/api/assetmanagement/v3/assets?filter={"and":{"deleted": {"eq": null}}}&size=100'
     response = requests.get(url, headers=requestHeaders())
     data = json.loads(response.text)
-    # setup for hiding deleted assets
-    for i in range(len(data['_embedded']['assets'])):
-        if '152' in data['_embedded']['assets'][i]['name']:
-            data['_embedded']['assets'][i]['name'] = '(DELETED)'
     return render_template('assets.html', assets_data = data)
 
 @app.route('/assets/<id>/aspects')
@@ -87,73 +58,8 @@ def timeseries(asset,aspect,var):
         dateFrom = pastDayTime.isoformat() + 'Z'
     url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
     response =requests.get(url, headers=requestHeaders())
-    print(url)
     graphJSON = plotts(json.loads(response.text),var)
     return render_template('timeseries.html',graphJSON = graphJSON, form = form, asset = asset, aspect = aspect, var = var)
-
-@app.route("/analytics")
-def analytics():
-    return render_template('unearthed/team.html')
-
-@app.route("/predict")
-def predict():
-    body = {}
-    body['modelConfiguration'] = {'polynomialDegree' : 1}
-    body['metadataConfiguration'] = {
-        'outputVariable' : {
-            'entityId' : 'Weather',
-            'propertySetName': 'tempSensor',
-            'propertyName': 'temperature'
-            },
-        "inputVariables": [{
-            "entityId": "Weather",
-            "propertySetName": "windDetector",
-            "propertyName": "windSpeed"
-            }]
-        }
-    body['trainingData'] = {
-        "variable": {
-        "entityId": "Weather",
-        "propertySetName": "tempSensor"
-      },
-      "timeSeries": [
-        {
-          "_time": "2017-10-01T12:00:00.001Z",
-          "powerOutputSensor": "20.0"
-        },
-        {
-          "_time": "2017-10-01T12:00:00.002Z",
-          "powerOutputSensor": "21.0"
-        },
-        {
-          "_time": "2017-10-01T12:00:00.003Z",
-          "powerOutputSensor": "23.0"
-        }
-      ]
-    }
-    return render_template('a_trend.html')
-
-
-
-@app.route('/buttondata')
-def buttondata():
-    asset = '6ccc6331c8604963b206d4f8ff73af2b'
-    aspect = 'anglobutton'
-    dateFrom = "2018-07-12T00:00:00Z"
-    dateTo = "2018-07-18T00:00:00Z"
-    url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
-    response =requests.get(url, headers=requestHeaders())
-    return render_template('b_buttonData.html',data = json.loads(response.text))
-
-@app.route('/getbuttondata')
-def getbuttondata():
-    asset = '6ccc6331c8604963b206d4f8ff73af2b'
-    aspect = 'anglobutton'
-    dateFrom = "2018-07-12T00:00:00Z"
-    dateTo = "2018-07-18T00:00:00Z"
-    url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
-    response =requests.get(url, headers=requestHeaders())
-    return jsonify(response.text)
 
 #test if env is in cloud foundry by getting VCAP port
 try:
