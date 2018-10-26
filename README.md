@@ -24,7 +24,7 @@ def getToken():
     return token
 ```
 
-Alternatively, hard code the token with a temporary bearer token, which you can reterieve using ([this app](https://github.com/rexkc/mdsp-token-vendor)):
+Alternatively, hard code the token with a temporary bearer token, which you can reterieve using [this app](https://github.com/rexkc/mdsp-token-vendor):
 
 ```py
 def getToken():
@@ -33,7 +33,7 @@ def getToken():
 ```
 
 ### Running on Mindsphere
-Ensure that you have Cloud Foundry installed on your computer and are correctly logged in ([more info here](https://developer.mindsphere.io/howto/howto-cloud-foundry/index.html)).
+Ensure that you have Cloud Foundry installed on your computer and are correctly logged in [more info here](https://developer.mindsphere.io/howto/howto-cloud-foundry/index.html).
 Change the name of your app within manifest.yml
 ```yaml
 #manifest.yml
@@ -49,7 +49,7 @@ Push the app to your MindSphere instance with
 ```sh
 $ cf push
 ```
-Then follow the ([steps on the developer site](https://developer.mindsphere.io/howto/howto-cf-running-app.html#deploy-the-application-to-cloud-foundry-via-cf-cli)) to register the application on MindSphere.
+Then follow the [steps on the developer site](https://developer.mindsphere.io/howto/howto-cf-running-app.html#deploy-the-application-to-cloud-foundry-via-cf-cli) to register the application on MindSphere.
 
 ### Test locally
 This script requires [Python2](https://www.python.org/download/releases/2.0/) to run, ensure vars.py in previous step is prepared.
