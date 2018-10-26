@@ -1,6 +1,6 @@
 ---
 applications:
-- name: dash-lite
+- name: demo-app
   instances: 1
   memory: 64MB
   disk_quota: 512MB
