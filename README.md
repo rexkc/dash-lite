@@ -51,14 +51,14 @@ $ cf push
 ```
 Then follow the [steps on the developer site](https://developer.mindsphere.io/howto/howto-cf-running-app.html#deploy-the-application-to-cloud-foundry-via-cf-cli) to register the application on MindSphere.
 
-Note that this app uses non-MindSphere source scripts and styles via cdn. These need to be declared when registering the application under the content-security-policy. Below is an example which allows all sources via https (which is not a secure policy), to declare the sources, simply switch https: with the sources required. e.g. https://maxcdn.bootstrapcdn.com.
+Note that this app uses non-MindSphere source scripts and styles via cdn. These need to be declared when registering the application under the content-security-policy. Below is an example which allows all sources via https (which is not a secure policy, do not use for applications in production), to declare the sources, simply switch the "https:" below with the sources required. e.g. https://maxcdn.bootstrapcdn.com.
 
 ```
 default-src 'self' static.eu1.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' static.eu1.mindsphere.io https:; img-src * data:; font-src 'self' https:;
 ```
 
 ### Test locally
-This script requires [Python2](https://www.python.org/download/releases/2.0/) to run, ensure vars.py in previous step is prepared.
+This script requires [Python2](https://www.python.org/download/releases/2.0/) or above to run, ensure vars.py in previous step is prepared.
 
 Install the required python packages run:
 ```sh
