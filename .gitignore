@@ -10,5 +10,4 @@ __pycache__/
 venv/
 ENV/
 
-vars.py
 .vscode
