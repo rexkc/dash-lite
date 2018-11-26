@@ -4,7 +4,17 @@ import datetime
 import plotly
 import plotly.graph_objs as go
 from flask import request
-from vars import getToken
+from oauthlib.oauth2 import BackendApplicationClient
+from requests_oauthlib import OAuth2Session
+from vars import tokenURL,credentials
+
+def getToken():
+    # create a backend client and retrieve a token
+    oauthclient = BackendApplicationClient(client_id=credentials['client_id'])
+    oauthsession = OAuth2Session(client=oauthclient)
+    token = oauthsession.fetch_token(token_url=tokenURL, client_id=credentials['client_id'],
+            client_secret=credentials['client_secret'])
+    return token
 
 tokenTime = ''
 currentToken = ''
