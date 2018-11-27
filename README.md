@@ -23,7 +23,7 @@ Then follow the [steps on the developer site](https://developer.mindsphere.io/ho
 Note that this app uses non-MindSphere source scripts and styles via cdn. These need to be declared when registering the application under the content-security-policy. Below is an example which allows all sources via https (which is not a secure policy, do not use for applications in production), to declare the sources, simply switch the "https:" below with the sources required. e.g. https://maxcdn.bootstrapcdn.com.
 
 ```
-default-src 'self' static.eu1.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' static.eu1.mindsphere.io https:; img-src * data:; font-src 'self' https:;
+default-src 'self' static.eu1.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-eval' static.eu1.mindsphere.io https://ajax https://cdn https://cdnjs https://stackpath 'unsafe-inline'; img-src * data:; font-src 'self' https://stackpath https://unpkg;
 ```
 
 ### Test locally
