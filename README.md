@@ -1,7 +1,7 @@
 # Basic Python app on MindSphere
 
 ### Running on Mindsphere
-Ensure that you have Cloud Foundry installed on your computer and are correctly logged in [more info here](https://developer.mindsphere.io/howto/howto-cloud-foundry/index.html).
+Ensure that you have Cloud Foundry installed on your computer and are correctly logged in [more info here](https://developer.mindsphere.io/paas/index.html).
 Change the name of your app within manifest.yml
 ```yaml
 #manifest.yml
