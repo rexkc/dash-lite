@@ -8,8 +8,13 @@ from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
 from vars import tokenURL,credentials
 
+## If using bearer token, replace requestHeaders() function with below function
+# def requestHeaders():
+#     headers = {'Authorization': 'Bearer ' + '<paste bearer token here>'}
+#     return headers
+
 def getToken():
-    # create a backend client and retrieve a token
+    # Function to create a backend client and retrieve a token
     oauthclient = BackendApplicationClient(client_id=credentials['client_id'])
     oauthsession = OAuth2Session(client=oauthclient)
     token = oauthsession.fetch_token(token_url=tokenURL, client_id=credentials['client_id'],
@@ -19,6 +24,7 @@ def getToken():
 tokenTime = ''
 currentToken = ''
 def requestHeaders():
+    # Function for constructing request headers
     global tokenTime
     global currentToken
     try:
@@ -34,6 +40,7 @@ def requestHeaders():
     return headers
 
 def plotts(data,var):
+    # Function to convert timeseries data into plotly graph object
     plotdata = []
     plottime = []
     for i in range(len(data)):

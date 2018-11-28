@@ -23,7 +23,7 @@ Then follow the [steps on the developer site](https://developer.mindsphere.io/ho
 Note that this app uses non-MindSphere source scripts and styles via cdn. These need to be declared when registering the application under the content-security-policy. Below is an example which allows all sources via https (which is not a secure policy, do not use for applications in production), to declare the sources, simply switch the "https:" below with the sources required. e.g. https://maxcdn.bootstrapcdn.com.
 
 ```
-default-src 'self' static.eu1.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-eval' static.eu1.mindsphere.io https://ajax https://cdn https://cdnjs https://stackpath 'unsafe-inline'; img-src * data:; font-src 'self' https://stackpath https://unpkg;
+default-src 'self' static.eu1.mindsphere.io; style-src * 'unsafe-inline'; script-src 'self' 'unsafe-eval' static.eu1.mindsphere.io ajax.googleapis.com cdnjs.cloudflare.com stackpath.bootstrapcdn.com unpkg.com cdn.plot.ly 'unsafe-inline'; img-src * data:; font-src 'self' stackpath.bootstrapcdn.com unpkg.com;
 ```
 
 ### Test locally
@@ -33,16 +33,9 @@ Install the required python packages run:
 ```sh
 $ pip install -r requirements.txt
 ```
-To run locally you need to authenticate your app to communicate with MindSphere api. I used a technical user, you can get one following  [these steps](https://developer.mindsphere.io/howto/howto-selfhosted/index.html#step-1-create-service-credentials).  Afterwards you need to add those details to vars.py
-Alternatively, you may want to use a bearer token, which will need to be added to vars.py
+To run locally, The app needs authentication to access the MindSphere api. This can be done using either:
 
-To run the application locally:
-```sh
-$ python server.py
-```
-For this app to run locally the it needs to be authenticated to communicate with the MindSphere APIs. To get client credentials, follow [these steps](https://developer.mindsphere.io/howto/howto-selfhosted/index.html#step-1-create-service-credentials).
-
-Afterwards create a new "vars.py" file and add to root folder with below code:
+ - a [technical user](https://developer.mindsphere.io/howto/howto-selfhosted/index.html#step-1-create-service-credentials).  Which needs to be added to "vars.py" in the root folder:
 
 ```py
 tenantID = '<tenant name>'
@@ -51,6 +44,13 @@ credentials = {
 'client_id': '<client id>',
 'client_secret': r'<client secret>',
 }
+```
+
+ - Or... a temporary bearer token in "functions.py", which you can reterieve using ([this app](https://github.com/rexkc/mdsp-token-vendor)):
+
+To run the application locally:
+```sh
+$ python server.py
 ```
 
 Alternatively, hard code the token with a temporary bearer token in "functions.py", which you can reterieve using ([this app](https://github.com/rexkc/mdsp-token-vendor)):
