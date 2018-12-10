@@ -5,15 +5,43 @@
     </li>
     <li class="breadcrumb-item active">Assets</li>
 </ol>
-{% for asset in assets_data._embedded.assets %} {% if asset.name != '(DELETED)'%}
 <div class="card">
     <div class="card-body">
-        <i data-feather="box"></i>
-        <b>Name:</b> {{asset.name}},
-        <b>ID:</b> {{asset.assetId}},
-        <a href="{{url_for('assets_aspects', id=asset.assetId)}}" class="btn btn-info float-right" role="button">Aspects</a>
+        <table id="assetTable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th scope="col">Asset Name</th>
+                    <th scope="col">Asset ID</th>
+                    <th scope="col">Aspects</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for asset in assets_data._embedded.assets|reverse %}
+                <tr>
+                    <td><i data-feather="box"></i>{{asset.name}}</td>
+                    <td>{{asset.assetId}}</td>
+                    <td><a href="{{url_for('assets_aspects', id=asset.assetId)}}" class="btn btn-block btn-info" role="button">Aspects</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th scope="col">Asset Name</th>
+                    <th scope="col">Asset ID</th>
+                    <th scope="col">Aspects</th>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 </div>
-{% endif %} {% endfor %}
-<h5 class="h5">(not showing assets with deletion flag)</h5>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+
+<script>
+  $(document).ready(function () {
+    $('#assetTable').DataTable({
+        "order": [[ 1, "desc" ]]
+    });
+  });
+</script>
 {% endblock %}

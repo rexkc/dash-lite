@@ -11,27 +11,33 @@
     </li>
     <li class="breadcrumb-item active">{{var}}</li>
 </ol>
-    <div class="card">
-        <div class="card-header">
-            <form action="" method="get" novalidate>
-                {{ form.hidden_tag() }}
-                <div class="form-row">
-                        <div class="col">{{ form.dateFrom(class_='form-control', placeholder='From (YYYY-MM-DDTHH:MM:SSZ)')}}</div>  
-                        <div class="col">{{ form.dateTo(class_='form-control', placeholder='To (YYYY-MM-DDTHH:MM:SSZ)')}}</div>   
-                        <div class="col">{{ form.submit(class_="btn btn-outline-info") }}</div>
-                        <a href=# style="margin-right: 10px;" class="btn btn-outline-info float-right"role="button">Past Week</a>
-                </div>
-            </form>
-        </div>
-        <div class="card-body">
-            <div id="myDiv"></div>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <form onsubmit="myFunction()" action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-row">
+                <div class="col">{{ form.dateFrom(class_='form-control', placeholder='From (YYYY-MM-DDTHH:MM:SSZ)')}}</div>
+                <div class="col">{{ form.dateTo(class_='form-control', placeholder='To (YYYY-MM-DDTHH:MM:SSZ)')}}</div>
+                <div class="col">{{ form.submit(class_="btn btn-outline-info") }}</div>
+            </div>
+        </form>
     </div>
-    <!-- Plotly.js -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    
-    <script>
-        var plotdata = {{graphJSON | safe}}
-        console.log(plotdata)
-        Plotly.newPlot('myDiv', plotdata);
-    </script> {% endblock %}
+    <div class="card-body">
+        <div id="myDiv"></div>
+    </div>
+</div>
+<!-- Plotly.js -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script>
+    var plotdata = {{ graphJSON | safe}}
+    console.log(plotdata)
+    Plotly.newPlot('myDiv', plotdata);
+</script>
+
+<script>
+    function myFunction() {
+        // var getPlotData = $.getJSON('{{ url_for('timeseries',asset=asset,aspect=aspect,var = var, from = )}}');
+    }
+</script>
+{% endblock %}

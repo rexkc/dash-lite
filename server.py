@@ -1,4 +1,4 @@
-from functions import plotts, requestHeaders
+from functions import requestHeaders, getTimeSeries
 from flask import Flask, render_template, jsonify, url_for, flash, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
@@ -19,9 +19,6 @@ app.config.from_object(Config)
 class resuableForm(FlaskForm):
     dateFrom = StringField('From', validators=[DataRequired()])
     dateTo = StringField('From', validators=[DataRequired()])
-    power = StringField('Power', validators=[DataRequired()])
-    temperature = StringField('Temperature', validators=[DataRequired()])
-    pressure = StringField('Pressure', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 @app.route('/')
@@ -48,17 +45,16 @@ def assets_aspects(id):
 @app.route("/timeseries/<asset>/<aspect>/<var>", methods=['GET','POST'])
 def timeseries(asset,aspect,var):
     form = resuableForm()
-    if form.validate_on_submit():
-        dateFrom = form.dateFrom.data
-        dateTo = form.dateTo.data
+    print(request.args.get('from'))
+    if 'from' in request.args:
+        dateFrom = request.args.get('from')
+        dateTo = request.args.get('to')
     else:
         currentTime = datetime.datetime.utcnow()
         pastDayTime = currentTime - datetime.timedelta(days = 7)
         dateTo = currentTime.isoformat() + 'Z'
         dateFrom = pastDayTime.isoformat() + 'Z'
-    url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}".format(asset,aspect,dateFrom,dateTo)
-    response =requests.get(url, headers=requestHeaders())
-    graphJSON = plotts(json.loads(response.text),var)
+    graphJSON = getTimeSeries(asset,aspect,var,dateFrom,dateTo)
     return render_template('timeseries.html',graphJSON = graphJSON, form = form, asset = asset, aspect = aspect, var = var)
 
 #test if env is in cloud foundry by getting VCAP port

@@ -1,6 +1,7 @@
 import os
 import json
 import datetime
+import requests
 import plotly
 import plotly.graph_objs as go
 from flask import request
@@ -28,7 +29,7 @@ def requestHeaders():
     global tokenTime
     global currentToken
     try:
-        int(os.getenv("VCAP_APP_PORT"))!= 5000 #app is running in cloud foundry
+        int(os.getenv("VCAP_APPLICATION")) #app is running in cloud foundry
         headers =  {'Authorization': request.headers["Authorization"]}
     except:
         if (tokenTime == '') or (datetime.datetime.now() > tokenTime + datetime.timedelta(minutes = 25)): #check expiry
@@ -39,24 +40,29 @@ def requestHeaders():
             headers = {'Authorization': 'Bearer ' + currentToken['access_token']}
     return headers
 
-def plotts(data,var):
-    # Function to convert timeseries data into plotly graph object
-    plotdata = []
-    plottime = []
+def getTimeSeries(asset,aspect,variable,dateFrom,dateTo):
+    url="https://gateway.eu1.mindsphere.io/api/iottimeseries/v3/timeseries/{0}/{1}?from={2}&to={3}&select={4}".format(asset,aspect,dateFrom,dateTo,variable)
+    response =requests.get(url, headers=requestHeaders())
+    graphJSON = plotTS(json.loads(response.text),variable)
+    return graphJSON
+
+def plotTS(data,variable):
+    plotData = []
+    plotTime = []
     for i in range(len(data)):
         try:
-            plotdata.append(data[i][var])
-            plottime.append(str(data[i]['_time']))
+            plotData.append(data[i][variable])
+            plotTime.append(str(data[i]['_time']))
         except:
             pass # ignore datapoints without the variable
 
     graph = dict(
         data=[go.Scatter(
-            x= plottime,
-            y= plotdata
+            x= plotTime,
+            y= plotData
         )],
         layout=dict(
-            title=var,
+            title=variable,
             yaxis=dict(
                 title="value"
             ),
