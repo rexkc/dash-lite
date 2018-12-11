@@ -68,7 +68,8 @@ def plotTS(data,variable):
             ),
             xaxis=dict(
                 title="time",
-                rangeslider={}
+                rangeslider={},
+                autorange = "true"
             )
         )
     )

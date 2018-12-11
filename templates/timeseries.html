@@ -1,4 +1,17 @@
 {% extends 'main.html' %} {% block body %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+<!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <!-- <strong>Title</strong> --> {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
 <ol class="breadcrumb">
     <li class="breadcrumb-item">
         <a href="/home">Home</a>
@@ -13,12 +26,11 @@
 </ol>
 <div class="card">
     <div class="card-header">
-        <form onsubmit="myFunction()" action="" method="post" novalidate>
-            {{ form.hidden_tag() }}
+        <form onsubmit="myFunction()" method="post" name="dateTimeForm" novalidate>
             <div class="form-row">
-                <div class="col">{{ form.dateFrom(class_='form-control', placeholder='From (YYYY-MM-DDTHH:MM:SSZ)')}}</div>
-                <div class="col">{{ form.dateTo(class_='form-control', placeholder='To (YYYY-MM-DDTHH:MM:SSZ)')}}</div>
-                <div class="col">{{ form.submit(class_="btn btn-outline-info") }}</div>
+                <div class="col"> <input type="text" class="form-control" id="dateFrom" placeholder="From (YYYY-MM-DDTHH:MM:SSZ)"></div>
+                <div class="col"> <input type="text" class="form-control" id="dateTo" placeholder="To (YYYY-MM-DDTHH:MM:SSZ)"></div>
+                <div class="col"><button type="submit" class="btn btn-outline-info">Submit</button></div>
             </div>
         </form>
     </div>
@@ -31,13 +43,36 @@
 
 <script>
     var plotdata = {{ graphJSON | safe}}
-    console.log(plotdata)
+    // console.log(plotdata)
     Plotly.newPlot('myDiv', plotdata);
 </script>
 
 <script>
     function myFunction() {
-        // var getPlotData = $.getJSON('{{ url_for('timeseries',asset=asset,aspect=aspect,var = var, from = )}}');
+        if (event.preventDefault)
+            event.preventDefault();
+        else
+            event.returnValue = false;
+        dateFrom = document.getElementById("dateFrom").value
+        dateTo = document.getElementById("dateTo").value
+        var getPlotData = $.getJSON('/data/timeseries/{{asset}}/{{aspect}}/{{var}}?from=' + dateFrom + '&to=' + dateTo);
+        getPlotData.done(function (results) {
+            console.log(results)
+            Plotly.animate('myDiv', {
+                layout: {
+                    xaxis: { range: [results.data[0].x[0], results.data[0].x[results.data[0].x["length"]-1]] }
+                },
+                data: [{
+                    y: results.data[0].y,
+                    x: results.data[0].x
+                }],
+            }, {
+                    transition: {
+                        duration: 1000,
+                        easing: 'cubic-in-out'
+                    }
+                })
+        });
     }
 </script>
 {% endblock %}

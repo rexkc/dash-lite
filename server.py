@@ -44,8 +44,6 @@ def assets_aspects(id):
 
 @app.route("/timeseries/<asset>/<aspect>/<var>", methods=['GET','POST'])
 def timeseries(asset,aspect,var):
-    form = resuableForm()
-    print(request.args.get('from'))
     if 'from' in request.args:
         dateFrom = request.args.get('from')
         dateTo = request.args.get('to')
@@ -55,7 +53,20 @@ def timeseries(asset,aspect,var):
         dateTo = currentTime.isoformat() + 'Z'
         dateFrom = pastDayTime.isoformat() + 'Z'
     graphJSON = getTimeSeries(asset,aspect,var,dateFrom,dateTo)
-    return render_template('timeseries.html',graphJSON = graphJSON, form = form, asset = asset, aspect = aspect, var = var)
+    return render_template('timeseries.html',graphJSON = graphJSON, asset = asset, aspect = aspect, var = var)
+
+@app.route("/data/timeseries/<asset>/<aspect>/<var>", methods=['GET','POST'])
+def timeseriesData(asset,aspect,var):
+    if 'from' in request.args:
+        dateFrom = request.args.get('from')
+        dateTo = request.args.get('to')
+    else:
+        currentTime = datetime.datetime.utcnow()
+        pastDayTime = currentTime - datetime.timedelta(days = 7)
+        dateTo = currentTime.isoformat() + 'Z'
+        dateFrom = pastDayTime.isoformat() + 'Z'
+    graphJSON = getTimeSeries(asset,aspect,var,dateFrom,dateTo)
+    return graphJSON
 
 #test if env is in cloud foundry by getting VCAP port
 try:
