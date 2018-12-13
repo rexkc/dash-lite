@@ -1,8 +1,0 @@
----
-applications:
-- name: demo-app
-  instances: 1
-  memory: 64MB
-  disk_quota: 512MB
-  buildpack: python_buildpack
-  command: python server.py
